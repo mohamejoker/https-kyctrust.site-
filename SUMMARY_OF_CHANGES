@@ -1,0 +1,15 @@
+There is no existing code. Please write it as a new file.
+
+- Remove placeholder aggregate files that don’t represent real code:
+  • Delete "MULTI_FILE" and "MULTI_FILE_EDIT" (they include pseudo-edits and can confuse the FS/build)
+
+- Fill the empty Admin route-group files so the Admin Dashboard actually works and is scoped:
+  • app/(admin)/admin/page.tsx: redirect to /dashboard
+  • app/(admin)/dashboard/layout.tsx: proper shell with Sidebar/Topbar and UnlockGate
+  • app/(admin)/dashboard/page.tsx: overview with analytics line chart and quick actions
+  • app/(admin)/dashboard/users/page.tsx: basic Users CRUD table (wired to existing /api/users)
+  • app/(admin)/dashboard/analytics/page.tsx: chart with regen action
+  • app/(admin)/dashboard/reports/page.tsx: placeholder with guidance
+
+- Simplify landing page:
+  • app/page.tsx: remove unused data/helpers; keep dir/lang, theme sync, published content sync, and render BlocksRenderer.
