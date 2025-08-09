@@ -1,33 +1,55 @@
-import type React from "react"
-import { Link } from "react-router-dom"
+"use client"
 
-const Sidebar: React.FC = () => {
-  const navItems = [
-    { href: "/dashboard/content", label: "Content" },
-    { href: "/dashboard/users", label: "Users" },
-    { href: "/dashboard/services", label: "Services" },
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { cn } from "@/lib/utils"
+import { LayoutDashboard, FileText, Users, BarChart2, Settings, PieChart } from 'lucide-react'
+
+export function Sidebar() {
+  const pathname = usePathname()
+  const nav = [
+    { href: "/dashboard", icon: LayoutDashboard, label: "Overview" },
+    { href: "/dashboard/content", icon: FileText, label: "Content" },
+    { href: "/dashboard/content/snapshots", icon: FileText, label: "Snapshots" },
+    { href: "/dashboard/reviews", icon: Users, label: "Reviews" }, // Added Reviews nav item
+    { href: "/dashboard/users", icon: Users, label: "Users" },
+    { href: "/dashboard/analytics", icon: PieChart, label: "Analytics" },
+    { href: "/dashboard/reports", icon: BarChart2, label: "Reports" },
+    { href: "/dashboard/settings/secrets", icon: Settings, label: "Secrets" },
+    { href: "/dashboard/settings", icon: Settings, label: "Settings" },
   ]
 
   return (
-    <div className="sidebar">
-      {navItems.map((item) => (
-        <Link
-          key={item.href}
-          to={item.href}
-          className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-accent hover:text-accent-foreground"
-        >
-          <svg aria-hidden="true" focusable="false" className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
-            <title>{item.label}</title>
-            <rect x="3" y="4" width="7" height="7" rx="1"></rect>
-            <rect x="14" y="4" width="7" height="7" rx="1"></rect>
-            <rect x="3" y="15" width="7" height="7" rx="1"></rect>
-            <rect x="14" y="15" width="7" height="7" rx="1"></rect>
-          </svg>
-          <span>{item.label}</span>
-        </Link>
-      ))}
-    </div>
+    <aside className="hidden h-screen w-64 flex-col border-r bg-background/60 p-4 backdrop-blur md:flex">
+      <div className="mb-6 text-lg font-bold">Admin Console</div>
+      <nav className="flex-1 space-y-1">
+        {nav.map((n) => {
+          const active = pathname === n.href
+          const Icon = n.icon
+          return (
+            <Link
+              key={n.href}
+              href={n.href}
+              className={cn(
+                "group relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-accent",
+                active && "bg-accent",
+              )}
+            >
+              {/* Active gradient indicator */}
+              <span
+                aria-hidden
+                className={cn(
+                  "absolute left-0 top-1/2 h-5 -translate-y-1/2 rounded-r-full bg-gradient-to-b from-violet-500 to-emerald-500 transition-all",
+                  active ? "w-1 opacity-100" : "w-0 opacity-0 group-hover:w-1 group-hover:opacity-60",
+                )}
+              />
+              <Icon className="h-4 w-4" />
+              <span>{n.label}</span>
+            </Link>
+          )
+        })}
+      </nav>
+      <div className="mt-4 text-xs text-muted-foreground">v1.1</div>
+    </aside>
   )
 }
-
-export default Sidebar

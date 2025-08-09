@@ -10,7 +10,7 @@ import { ScrollReveal } from "@/components/animate/scroll-reveal"
 import { useCMS } from "@/lib/store"
 import type { Bundle, Locale } from "@/lib/types"
 import { Filter, MessageCircle, Search, Star } from "lucide-react"
-import { useMemo, useState, useEffect } from "react"
+import { useMemo, useState } from "react"
 
 /**
  * Build WhatsApp deep link for service order.
@@ -160,24 +160,7 @@ export function ServicesBlock({
     () => ["all", ...Array.from(new Set(data.services.map((s) => s.category)))],
     [data.services],
   )
-  const [remoteServices, setRemoteServices] = useState<any[] | null>(null)
-
-  useEffect(() => {
-    let on = true
-    ;(async () => {
-      try {
-        const r = await fetch("/api/services/public", { cache: "no-store" })
-        if (!r.ok) return
-        const j = await r.json()
-        if (on && Array.isArray(j) && j.length) setRemoteServices(j)
-      } catch {}
-    })()
-    return () => {
-      on = false
-    }
-  }, [])
-
-  const contentServices = useMemo(
+  const services = useMemo(
     () =>
       data.services
         .filter((s) => s.active !== false)
@@ -186,19 +169,6 @@ export function ServicesBlock({
         .sort((a, b) => a.sort - b.sort),
     [data.services, category, q],
   )
-  const services = useMemo(() => {
-    if (Array.isArray(remoteServices) && remoteServices.length) {
-      return remoteServices.map((s) => ({
-        ...s,
-        iconImage: s.icon_image ?? s.iconImage ?? null,
-        note: s.note ?? null,
-        active: s.active !== false,
-        popular: !!s.popular,
-        sort: typeof s.sort === "number" ? s.sort : 0,
-      }))
-    }
-    return contentServices
-  }, [remoteServices, contentServices])
   const logos = Array.isArray(data.logos) ? data.logos : []
   const { design } = useCMS()
   const enable = design.anim?.enableReveal !== false
