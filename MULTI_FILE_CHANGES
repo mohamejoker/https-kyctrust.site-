@@ -1,141 +1,70 @@
+// app/api/content/published/route.ts
+export async function GET() {
+  await ensureSchema()
+  const payload = await getSetting("published_content")
+  const headers = new Headers({
+    "Cache-Control": "no-store",
+    "Content-Type": "application/json",
+  })
+  return new Response(JSON.stringify(payload || null), { status: 200, headers })
+}
+
+// app/(admin)/dashboard/content/page.tsx
+import { notifyPublished } from "@/lib/realtime"
+
+// Existing code here
+
+async function publish() {
+  const r = await fetch("/api/content/publish", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(content),
+  })
+
+  if (!r.ok) {
+    // Handle error here
+  } else {
+    notifyPublished()
+    // Handle success here
+  }
+}
+
 // app/page.tsx
-import React from "react";
-import { ScrollProgress } from "@/components/animate/scroll-progress";
-import { AnimatedGrid } from "@/components/visual/animated-grid";
+import { subscribePublished } from "@/lib/realtime"
+import React from "react"
+import { useEffect } from "react"
+
+// Existing code here
 
 const Page = () => {
-  return (
-    <div className="min-h-screen">
-      <ScrollProgress />
-      <AnimatedGrid />
-      {/* rest of code here */}
-    </div>
-  );
-};
+  const [content, setContent] = React.useState({ ar: "", en: "" })
+  const [design, setDesign] = React.useState(null)
 
-export default Page;
+  // Helper to refetch published content on demand
+  const refetchPublished = React.useCallback(async () => {
+    try {
+      const r = await fetch("/api/content/published", { cache: "no-store" })
+      if (!r.ok) return
+      const j = await r.json()
+      if (j && j.ar && j.en) {
+        setContent("ar", j.ar)
+        setContent("en", j.en)
+        if (j.design) setDesign(j.design)
+      }
+    } catch {}
+  }, [setContent, setDesign])
 
-// components/blocks/hero-block.tsx
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { MessageCircle, ArrowLeft, ArrowRight } from 'lucide-react';
-import { Magnetic } from "@/components/animate/magnetic";
+  // Subscribe to admin publish events and refetch
+  useEffect(() => {
+    const unsub = subscribePublished(() => {
+      refetchPublished()
+    })
+    return () => unsub()
+  }, [refetchPublished])
 
-const HeroBlock = ({ data, isRTL, locale }) => {
-  const buildWhatsApp = (subject, body, locale, siteName) => {
-    // implementation here
-  };
+  // Existing code here
+}
 
-  return (
-    <div>
-      <Magnetic>
-        <Button
-          className={`group min-w-[260px] bg-gradient-to-r ${palette.range} text-white`}
-          size="lg"
-          onClick={() =>
-            window.open(
-              buildWhatsApp(isRTL ? "استفسار عام" : "General Inquiry", "N/A", locale, data.site.name),
-              "_blank"
-            )
-          }
-        >
-          <MessageCircle className="h-5 w-5 me-2" />
-          {data.hero.cta}
-          {isRTL ? (
-            <ArrowLeft className="ms-2 h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
-          ) : (
-            <ArrowRight className="ms-2 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-          )}
-        </Button>
-      </Magnetic>
-      {/* rest of code here */}
-    </div>
-  );
-};
-
-export default HeroBlock;
-
-// components/blocks/features-block.tsx
-import React from "react";
-import { Card } from "@/components/ui/card";
-import { ScrollReveal } from "@/components/animate/scroll-reveal";
-import { TiltCard } from "@/components/animate/tilt-card";
-
-const FeaturesBlock = ({ data, isRTL }) => {
-  return (
-    <div>
-      {data.features.map((feature, i) => (
-        <ScrollReveal key={i} y={16 * i} delay={i * 0.05}>
-          <TiltCard>
-            <Card className="group border-neutral-200/60 bg-white/70 transition-transform hover:-translate-y-1 hover:shadow-xl backdrop-blur dark:border-neutral-800/60 dark:bg-neutral-900/50">
-              {/* rest of code here */}
-            </Card>
-          </TiltCard>
-        </ScrollReveal>
-      ))}
-      {/* rest of code here */}
-    </div>
-  );
-};
-
-export default FeaturesBlock;
-
-// components/blocks/services-block.tsx
-import React from "react";
-import { Card } from "@/components/ui/card";
-import { ScrollReveal } from "@/components/animate/scroll-reveal";
-import { TiltCard } from "@/components/animate/tilt-card";
-
-const ServicesBlock = ({ data, isRTL }) => {
-  const CardInner = ({ service }) => {
-    return (
-      <TiltCard>
-        <Card className="group border-neutral-200/60 bg-white/70 backdrop-blur transition-transform hover:-translate-y-1.5 hover:shadow-2xl dark:border-neutral-800/60 dark:bg-neutral-900/50">
-          {/* rest of code here */}
-        </Card>
-      </TiltCard>
-    );
-  };
-
-  return (
-    <div>
-      {data.services.map((service, i) => (
-        <ScrollReveal key={i} y={16 * i} delay={i * 0.05}>
-          <CardInner service={service} />
-        </ScrollReveal>
-      ))}
-      {/* rest of code here */}
-    </div>
-  );
-};
-
-export default ServicesBlock;
-
-// components/blocks/testimonials-block.tsx
-import React from "react";
-import { Card } from "@/components/ui/card";
-import { ScrollReveal } from "@/components/animate/scroll-reveal";
-
-const TestimonialsBlock = ({ data }) => {
-  return (
-    <div>
-      {data.testimonials.map((testimonial, i) => (
-        <ScrollReveal key={i} y={16 * i} delay={i * 0.05}>
-          <Card
-            className={[
-              "relative border-neutral-200/60 bg-white/70 backdrop-blur dark:border-neutral-800/60 dark:bg-neutral-900/50 transition-all",
-              "hover:-translate-y-1 hover:shadow-xl",
-              entered ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0",
-            ].join(" ")}
-          >
-            {/* rest of code here */}
-            <div aria-hidden className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-transparent group-hover:ring-emerald-400/20" />
-          </Card>
-        </ScrollReveal>
-      ))}
-      {/* rest of code here */}
-    </div>
-  );
-};
-
-export default TestimonialsBlock;
+export default Page

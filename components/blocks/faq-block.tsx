@@ -13,7 +13,7 @@ export function FAQBlock({ data, isRTL, palette }: { data: Bundle; isRTL: boolea
   const k = design.anim?.intensity ?? 1
 
   return (
-    <section id="faq" className="relative bg-gradient-to-b from-emerald-50/40 to-white px-4 py-16 dark:from-neutral-950 dark:to-neutral-950">
+    <section className="relative bg-gradient-to-b from-emerald-50/40 to-white px-4 py-16 dark:from-neutral-950 dark:to-neutral-950">
       <div className="mx-auto max-w-7xl">
         <div className="text-center">
           {enable ? (

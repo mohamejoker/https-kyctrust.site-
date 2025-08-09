@@ -7,20 +7,19 @@ import { LayoutDashboard, FileText, Users, BarChart2, Settings, PieChart } from 
 
 export function Sidebar() {
   const pathname = usePathname()
+
   const nav = [
     { href: "/dashboard", icon: LayoutDashboard, label: "Overview" },
     { href: "/dashboard/content", icon: FileText, label: "Content" },
     { href: "/dashboard/content/snapshots", icon: FileText, label: "Snapshots" },
-    { href: "/dashboard/reviews", icon: Users, label: "Reviews" }, // Added Reviews nav item
     { href: "/dashboard/users", icon: Users, label: "Users" },
     { href: "/dashboard/analytics", icon: PieChart, label: "Analytics" },
     { href: "/dashboard/reports", icon: BarChart2, label: "Reports" },
-    { href: "/dashboard/settings/secrets", icon: Settings, label: "Secrets" },
     { href: "/dashboard/settings", icon: Settings, label: "Settings" },
   ]
 
   return (
-    <aside className="hidden h-screen w-64 flex-col border-r bg-background/60 p-4 backdrop-blur md:flex">
+    <aside className="hidden h-screen w-64 flex-col border-r bg-background p-4 md:flex">
       <div className="mb-6 text-lg font-bold">Admin Console</div>
       <nav className="flex-1 space-y-1">
         {nav.map((n) => {
@@ -31,25 +30,17 @@ export function Sidebar() {
               key={n.href}
               href={n.href}
               className={cn(
-                "group relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-accent",
-                active && "bg-accent",
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-accent",
+                active && "bg-accent"
               )}
             >
-              {/* Active gradient indicator */}
-              <span
-                aria-hidden
-                className={cn(
-                  "absolute left-0 top-1/2 h-5 -translate-y-1/2 rounded-r-full bg-gradient-to-b from-violet-500 to-emerald-500 transition-all",
-                  active ? "w-1 opacity-100" : "w-0 opacity-0 group-hover:w-1 group-hover:opacity-60",
-                )}
-              />
               <Icon className="h-4 w-4" />
               <span>{n.label}</span>
             </Link>
           )
         })}
       </nav>
-      <div className="mt-4 text-xs text-muted-foreground">v1.1</div>
+      <div className="mt-4 text-xs text-muted-foreground">v1.0 demo</div>
     </aside>
   )
 }

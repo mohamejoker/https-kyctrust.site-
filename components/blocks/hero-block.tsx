@@ -1,15 +1,45 @@
 "use client"
 
 import Image from "next/image"
-import { ArrowLeft, ArrowRight, MessageCircle, Sparkles } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Globe, MessageCircle, Moon, Shield, Sparkles, Sun } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import type { Bundle, Locale } from "@/lib/types"
 import { paletteGrad } from "@/lib/palette"
 import { useCMS } from "@/lib/store"
+import { useTheme } from "next-themes"
 import { useParallax, useInViewOnce } from "@/hooks/use-parallax"
 import { motion, useReducedMotion } from "framer-motion"
-import { buildWhatsApp } from "@/lib/whatsapp"
+
+function buildWhatsApp(service: string, price: string, locale: Locale = "ar", brand = "kyctrust") {
+  const phone = "201062453344"
+  const timestamp = Date.now()
+  const requestId = `LP-${timestamp}`
+  const messages: Record<Locale, string> = {
+    ar: `🔥 طلب خدمة من ${brand}
+
+📋 تفاصيل الطلب:
+• الخدمة: ${service}
+• السعر: ${price}
+• اللغة: ${locale}
+• معرف الطلب: ${requestId}
+
+⏰ سنرد عليك خلال 15 دقيقة
+🛡️ خدمة آمنة ومضمونة 100%`,
+    en: `🔥 Service Request from ${brand}
+
+📋 Order Details:
+• Service: ${service}
+• Price: ${price}
+• Language: ${locale}
+• Request ID: ${requestId}
+
+⏰ We'll reply within 15 minutes
+🛡️ 100% Safe and Guaranteed Service`,
+  }
+  const text = encodeURIComponent(messages[locale] || messages.ar)
+  return `https://wa.me/${phone}?text=${text}`
+}
 
 export function HeroBlock({
   data,
@@ -22,12 +52,13 @@ export function HeroBlock({
   isRTL: boolean
   palette: ReturnType<typeof paletteGrad>
 }) {
-  const { design } = useCMS()
+  const { setLocale, design } = useCMS()
+  const { theme, setTheme } = useTheme()
   const parallax = useParallax(design.anim?.parallax ?? 14)
 
   return (
     <section
-      className="relative px-4 pt-20 pb-12 md:pt-28"
+      className="relative px-4 pt-16 pb-12 md:pt-24"
       ref={parallax.ref as any}
       onPointerMove={parallax.onMove as any}
     >
@@ -36,7 +67,56 @@ export function HeroBlock({
         <div className="absolute -bottom-48 -left-32 h-80 w-80 rounded-full bg-violet-500/15 blur-3xl animate-pulse [animation-delay:600ms]" />
       </div>
       <div className="mx-auto max-w-7xl">
-        {/* Hero core */}
+        {/* Header */}
+        <header className="mb-6 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div
+              className={`grid h-11 w-11 place-items-center overflow-hidden rounded-xl bg-gradient-to-br ${palette.range} text-white shadow-lg`}
+              style={parallax.styleFor(0.2)}
+            >
+              {data.site.logoSrc ? (
+                <Image
+                  src={data.site.logoSrc || "/placeholder.svg"}
+                  alt={`${data.site.name} logo`}
+                  width={44}
+                  height={44}
+                  className="h-11 w-11 object-contain"
+                  priority
+                />
+              ) : (
+                <Shield className="h-6 w-6" aria-label="Brand logo" />
+              )}
+            </div>
+            <div>
+              <p
+                className={`text-lg font-bold bg-gradient-to-r ${palette.range} bg-clip-text text-transparent`}
+              >
+                {data.site.name}
+              </p>
+              <p className="text-xs text-muted-foreground">{data.site.tagline}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setLocale(locale === "ar" ? "en" : "ar")}
+            >
+              <Globe className="me-2 h-4 w-4" />
+              {locale === "ar" ? "English" : "عربي"}
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Toggle theme"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            >
+              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </Button>
+          </div>
+        </header>
+
+        {/* Hero */}
         <div className="relative overflow-hidden rounded-3xl border bg-background/60 p-8 shadow-sm backdrop-blur dark:border-neutral-800/60">
           <DecorativeLogos data={data} palette={palette} />
           <div className="relative z-10 text-center">
@@ -49,7 +129,9 @@ export function HeroBlock({
               </span>
             </div>
             <h1 className="text-5xl font-extrabold tracking-tight md:text-7xl">
-              <span className={`bg-gradient-to-r ${palette.range} bg-clip-text text-transparent`}>
+              <span
+                className={`bg-gradient-to-r ${palette.range} bg-clip-text text-transparent`}
+              >
                 {data.hero.title}
               </span>
             </h1>
@@ -122,6 +204,7 @@ function DecorativeLogos({
   data: Bundle
   palette: ReturnType<typeof paletteGrad>
 }) {
+  // Guard against undefined arrays in persisted states
   const logos = Array.isArray(data.logos) ? data.logos.slice(0, 6) : []
   if (!logos.length) return null
 

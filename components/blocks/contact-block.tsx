@@ -70,7 +70,7 @@ export function ContactBlock({ data, locale, palette }: { data: Bundle; locale: 
   }
 
   return (
-    <section id="contact" className="relative px-4 py-16">
+    <section className="relative px-4 py-16">
       <div className="mx-auto max-w-7xl">
         {enable ? (
           <ScrollReveal y={20 * k}>

@@ -47,26 +47,6 @@ export async function ensureSchema() {
 
   await sql`CREATE INDEX IF NOT EXISTS idx_rate_limits_key_ts ON rate_limits (key, ts DESC);`
   await sql`CREATE INDEX IF NOT EXISTS idx_content_snapshots_locale_created ON content_snapshots (locale, created_at DESC);`
-
-  // New chat_sessions and chat_messages tables and indexes
-  await sql`
-  CREATE TABLE IF NOT EXISTS chat_sessions (
-    id BIGSERIAL PRIMARY KEY,
-    session_id TEXT UNIQUE NOT NULL,
-    user_prefs JSONB,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-  );`
-
-  await sql`
-  CREATE TABLE IF NOT EXISTS chat_messages (
-    id BIGSERIAL PRIMARY KEY,
-    session_id TEXT NOT NULL,
-    role TEXT NOT NULL CHECK (role IN ('user','assistant')),
-    content TEXT NOT NULL,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-  );`
-
-  await sql`CREATE INDEX IF NOT EXISTS idx_chat_messages_session_created ON chat_messages (session_id, created_at DESC);`
 }
 
 export async function getSetting(key: string) {

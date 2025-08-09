@@ -4,13 +4,10 @@ import React, { useEffect } from "react"
 import { useTheme } from "next-themes"
 import { useCMS } from "@/lib/store"
 import { BlocksRenderer } from "@/components/blocks/blocks-renderer"
-import { Shield } from "lucide-react"
+import { paletteGrad } from "@/lib/palette"
+import { Shield } from 'lucide-react'
+import { Card, CardContent } from "@/components/ui/card"
 import { subscribePublished } from "@/lib/realtime"
-import { SiteHeader } from "@/components/layout/site-header"
-import { SiteFooter } from "@/components/layout/site-footer"
-import { ChatbotWidget } from "@/components/chatbot/chatbot-widget"
-import { PerfHints } from "@/components/perf/perf-hints"
-import { ReviewsSection } from "@/components/reviews/reviews-section"
 
 // localStorage hook (client-safe)
 function useLocalStorage<T>(key: string, initialValue: T) {
@@ -51,7 +48,8 @@ const siteData: Record<string, any> = {
     hero: {
       title: "KYCtrust",
       subtitle: "منصة متكاملة للخدمات المالية الرقمية",
-      description: "احصل على أفضل الحسابات البنكية الإلكترونية والمحافظ الرقمية بأمان وسرعة لا مثيل لها",
+      description:
+        "احصل على أفضل الحسابات البنكية الإلكترونية والمحافظ الرقمية بأمان وسرعة لا مثيل لها",
       cta: "ابدأ رحلتك المالية",
       secondary: "تصفح خدماتنا",
       stats: [
@@ -62,163 +60,23 @@ const siteData: Record<string, any> = {
       ],
     },
     services: [
-      {
-        name: "Payoneer",
-        price: "$30",
-        category: "حسابات بنكية",
-        icon: "💳",
-        popular: true,
-        active: true,
-        sort: 1,
-        description: "حساب بنكي عالمي موثوق",
-      },
-      {
-        name: "Wise",
-        price: "$30",
-        category: "حسابات بنكية",
-        icon: "🏦",
-        popular: true,
-        active: true,
-        sort: 2,
-        description: "تحويلات دولية بأقل رسوم",
-      },
-      {
-        name: "Skrill",
-        price: "$20",
-        category: "محافظ إلكترونية",
-        icon: "💰",
-        active: true,
-        sort: 3,
-        description: "محفظة إلكترونية آمنة وسريعة",
-      },
-      {
-        name: "Neteller",
-        price: "$20",
-        category: "محافظ إلكترونية",
-        icon: "💸",
-        active: true,
-        sort: 4,
-        description: "مدفوعات فورية عالميا",
-      },
-      {
-        name: "Kast",
-        price: "$20",
-        category: "محافظ إلكترونية",
-        icon: "🎯",
-        active: true,
-        sort: 5,
-        description: "حلول دفع مبتكرة",
-      },
-      {
-        name: "Redotpay",
-        price: "$20",
-        category: "محافظ إلكترونية",
-        icon: "🔴",
-        active: true,
-        sort: 6,
-        description: "بطاقات افتراضية متقدمة",
-      },
-      {
-        name: "Okx",
-        price: "$20",
-        category: "عملات رقمية",
-        icon: "⚡",
-        active: true,
-        sort: 7,
-        description: "منصة تداول العملات المشفرة",
-      },
-      {
-        name: "World First",
-        price: "$20",
-        category: "حسابات بنكية",
-        icon: "🌍",
-        active: true,
-        sort: 8,
-        description: "خدمات مصرفية دولية",
-      },
-      {
-        name: "Bybit",
-        price: "$20",
-        category: "عملات رقمية",
-        icon: "📈",
-        active: true,
-        sort: 9,
-        description: "تداول العقود الآجلة",
-      },
-      {
-        name: "Bitget",
-        price: "$20",
-        category: "عملات رقمية",
-        icon: "🚀",
-        active: true,
-        sort: 10,
-        description: "منصة تداول متطورة",
-      },
-      {
-        name: "Kucoin",
-        price: "$20",
-        category: "عملات رقمية",
-        icon: "🔥",
-        active: true,
-        sort: 11,
-        description: "بورصة عملات رقمية شاملة",
-      },
-      {
-        name: "PayPal",
-        price: "$15",
-        category: "محافظ إلكترونية",
-        icon: "💙",
-        popular: true,
-        active: true,
-        sort: 12,
-        description: "الحل الأشهر للمدفوعات",
-      },
-      {
-        name: "Mexc",
-        price: "$20",
-        category: "عملات رقمية",
-        icon: "💎",
-        active: true,
-        sort: 13,
-        description: "منصة تداول عملات رقمية",
-      },
-      {
-        name: "Exness",
-        price: "$20",
-        category: "تداول",
-        icon: "📊",
-        active: true,
-        sort: 14,
-        description: "وسيط فوركس موثوق",
-      },
-      {
-        name: "شحن فودافون كاش",
-        price: "120 جنيه/100 جنيه",
-        note: "خصم للكميات الكبيرة",
-        category: "خدمات محلية",
-        icon: "📱",
-        active: true,
-        sort: 15,
-        description: "شحن فوري بأفضل سعر",
-      },
-      {
-        name: "سحب من TikTok",
-        price: "حسب المبلغ",
-        category: "خدمات خاصة",
-        icon: "🎵",
-        active: true,
-        sort: 16,
-        description: "سحب أرباح تيك توك بسهولة",
-      },
-      {
-        name: "سحب من PayPal",
-        price: "حسب المبلغ",
-        category: "خدمات خاصة",
-        icon: "💰",
-        active: true,
-        sort: 17,
-        description: "تحويل أموال PayPal محليا",
-      },
+      { name: "Payoneer", price: "$30", category: "حسابات بنكية", icon: "💳", popular: true, active: true, sort: 1, description: "حساب بنكي عالمي موثوق" },
+      { name: "Wise", price: "$30", category: "حسابات بنكية", icon: "🏦", popular: true, active: true, sort: 2, description: "تحويلات دولية بأقل رسوم" },
+      { name: "Skrill", price: "$20", category: "محافظ إلكترونية", icon: "💰", active: true, sort: 3, description: "محفظة إلكترونية آمنة وسريعة" },
+      { name: "Neteller", price: "$20", category: "محافظ إلكترونية", icon: "💸", active: true, sort: 4, description: "مدفوعات فورية عالميا" },
+      { name: "Kast", price: "$20", category: "محافظ إلكترونية", icon: "🎯", active: true, sort: 5, description: "حلول دفع مبتكرة" },
+      { name: "Redotpay", price: "$20", category: "محافظ إلكترونية", icon: "🔴", active: true, sort: 6, description: "بطاقات افتراضية متقدمة" },
+      { name: "Okx", price: "$20", category: "عملات رقمية", icon: "⚡", active: true, sort: 7, description: "منصة تداول العملات المشفرة" },
+      { name: "World First", price: "$20", category: "حسابات بنكية", icon: "🌍", active: true, sort: 8, description: "خدمات مصرفية دولية" },
+      { name: "Bybit", price: "$20", category: "عملات رقمية", icon: "📈", active: true, sort: 9, description: "تداول العقود الآجلة" },
+      { name: "Bitget", price: "$20", category: "عملات رقمية", icon: "🚀", active: true, sort: 10, description: "منصة تداول متطورة" },
+      { name: "Kucoin", price: "$20", category: "عملات رقمية", icon: "🔥", active: true, sort: 11, description: "بورصة عملات رقمية شاملة" },
+      { name: "PayPal", price: "$15", category: "محافظ إلكترونية", icon: "💙", popular: true, active: true, sort: 12, description: "الحل الأشهر للمدفوعات" },
+      { name: "Mexc", price: "$20", category: "عملات رقمية", icon: "💎", active: true, sort: 13, description: "منصة تداول عملات رقمية" },
+      { name: "Exness", price: "$20", category: "تداول", icon: "📊", active: true, sort: 14, description: "وسيط فوركس موثوق" },
+      { name: "شحن فودافون كاش", price: "120 جنيه/100 جنيه", note: "خصم للكميات الكبيرة", category: "خدمات محلية", icon: "📱", active: true, sort: 15, description: "شحن فوري بأفضل سعر" },
+      { name: "سحب من TikTok", price: "حسب المبلغ", category: "خدمات خاصة", icon: "🎵", active: true, sort: 16, description: "سحب أرباح تيك توك بسهولة" },
+      { name: "سحب من PayPal", price: "حسب المبلغ", category: "خدمات خاصة", icon: "💰", active: true, sort: 17, description: "تحويل أموال PayPal محليا" },
     ],
     payments: [
       { label: "فودافون كاش", value: "01062453344", icon: "📱", color: "red" },
@@ -243,11 +101,13 @@ const siteData: Record<string, any> = {
       },
       {
         question: "ما هي طرق الدفع المتاحة؟",
-        answer: "نقبل الدفع عبر فودافون كاش والعملات الرقمية USDT TRC20 فقط لضمان الأمان والسرعة في المعاملات.",
+        answer:
+          "نقبل الدفع عبر فودافون كاش والعملات الرقمية USDT TRC20 فقط لضمان الأمان والسرعة في المعاملات.",
       },
       {
         question: "هل تقدمون خدمة ما بعد البيع؟",
-        answer: "بالطبع، نقدم دعم فني مجاني مدى الحياة لجميع عملائنا مع إرشادات مفصلة لاستخدام حساباتكم الجديدة.",
+        answer:
+          "بالطبع، نقدم دعم فني مجاني مدى الحياة لجميع عملائنا مع إرشادات مفصلة لاستخدام حساباتكم الجديدة.",
       },
     ],
     contact: {
@@ -260,14 +120,16 @@ const siteData: Record<string, any> = {
   en: {
     site: {
       name: "KYCtrust",
-      description: "Specialized service for secure electronic banking accounts and financial services",
+      description:
+        "Specialized service for secure electronic banking accounts and financial services",
       phone: "+20-106-245-3344",
       tagline: "Your trusted partner in the digital world",
     },
     hero: {
       title: "KYCtrust",
       subtitle: "Complete Digital Financial Services Platform",
-      description: "Get the best electronic banking accounts and digital wallets with unmatched security and speed",
+      description:
+        "Get the best electronic banking accounts and digital wallets with unmatched security and speed",
       cta: "Start Your Financial Journey",
       secondary: "Browse Our Services",
       stats: [
@@ -278,163 +140,23 @@ const siteData: Record<string, any> = {
       ],
     },
     services: [
-      {
-        name: "Payoneer",
-        price: "$30",
-        category: "Banking",
-        icon: "💳",
-        popular: true,
-        active: true,
-        sort: 1,
-        description: "Trusted global banking account",
-      },
-      {
-        name: "Wise",
-        price: "$30",
-        category: "Banking",
-        icon: "🏦",
-        popular: true,
-        active: true,
-        sort: 2,
-        description: "International transfers with lowest fees",
-      },
-      {
-        name: "Skrill",
-        price: "$20",
-        category: "E-Wallets",
-        icon: "💰",
-        active: true,
-        sort: 3,
-        description: "Safe and fast digital wallet",
-      },
-      {
-        name: "Neteller",
-        price: "$20",
-        category: "E-Wallets",
-        icon: "💸",
-        active: true,
-        sort: 4,
-        description: "Instant payments worldwide",
-      },
-      {
-        name: "Kast",
-        price: "$20",
-        category: "E-Wallets",
-        icon: "🎯",
-        active: true,
-        sort: 5,
-        description: "Innovative payment solutions",
-      },
-      {
-        name: "Redotpay",
-        price: "$20",
-        category: "E-Wallets",
-        icon: "🔴",
-        active: true,
-        sort: 6,
-        description: "Advanced virtual cards",
-      },
-      {
-        name: "Okx",
-        price: "$20",
-        category: "Crypto",
-        icon: "⚡",
-        active: true,
-        sort: 7,
-        description: "Crypto trading platform",
-      },
-      {
-        name: "World First",
-        price: "$20",
-        category: "Banking",
-        icon: "🌍",
-        active: true,
-        sort: 8,
-        description: "International banking services",
-      },
-      {
-        name: "Bybit",
-        price: "$20",
-        category: "Crypto",
-        icon: "📈",
-        active: true,
-        sort: 9,
-        description: "Futures trading platform",
-      },
-      {
-        name: "Bitget",
-        price: "$20",
-        category: "Crypto",
-        icon: "🚀",
-        active: true,
-        sort: 10,
-        description: "Advanced trading platform",
-      },
-      {
-        name: "Kucoin",
-        price: "$20",
-        category: "Crypto",
-        icon: "🔥",
-        active: true,
-        sort: 11,
-        description: "Comprehensive crypto exchange",
-      },
-      {
-        name: "PayPal",
-        price: "$15",
-        category: "E-Wallets",
-        icon: "💙",
-        popular: true,
-        active: true,
-        sort: 12,
-        description: "Most popular payment solution",
-      },
-      {
-        name: "Mexc",
-        price: "$20",
-        category: "Crypto",
-        icon: "💎",
-        active: true,
-        sort: 13,
-        description: "Crypto trading exchange",
-      },
-      {
-        name: "Exness",
-        price: "$20",
-        category: "Trading",
-        icon: "📊",
-        active: true,
-        sort: 14,
-        description: "Trusted forex broker",
-      },
-      {
-        name: "Vodafone Cash Top-up",
-        price: "120 EGP/100 EGP",
-        note: "Bulk discount available",
-        category: "Local Services",
-        icon: "📱",
-        active: true,
-        sort: 15,
-        description: "Instant top-up best rates",
-      },
-      {
-        name: "TikTok Withdrawal",
-        price: "Based on amount",
-        category: "Special Services",
-        icon: "🎵",
-        active: true,
-        sort: 16,
-        description: "Easy TikTok earnings withdrawal",
-      },
-      {
-        name: "PayPal Withdrawal",
-        price: "Based on amount",
-        category: "Special Services",
-        icon: "💰",
-        active: true,
-        sort: 17,
-        description: "Local PayPal money transfer",
-      },
+      { name: "Payoneer", price: "$30", category: "Banking", icon: "💳", popular: true, active: true, sort: 1, description: "Trusted global banking account" },
+      { name: "Wise", price: "$30", category: "Banking", icon: "🏦", popular: true, active: true, sort: 2, description: "International transfers with lowest fees" },
+      { name: "Skrill", price: "$20", category: "E-Wallets", icon: "💰", active: true, sort: 3, description: "Safe and fast digital wallet" },
+      { name: "Neteller", price: "$20", category: "E-Wallets", icon: "💸", active: true, sort: 4, description: "Instant payments worldwide" },
+      { name: "Kast", price: "$20", category: "E-Wallets", icon: "🎯", active: true, sort: 5, description: "Innovative payment solutions" },
+      { name: "Redotpay", price: "$20", category: "E-Wallets", icon: "🔴", active: true, sort: 6, description: "Advanced virtual cards" },
+      { name: "Okx", price: "$20", category: "Crypto", icon: "⚡", active: true, sort: 7, description: "Crypto trading platform" },
+      { name: "World First", price: "$20", category: "Banking", icon: "🌍", active: true, sort: 8, description: "International banking services" },
+      { name: "Bybit", price: "$20", category: "Crypto", icon: "📈", active: true, sort: 9, description: "Futures trading platform" },
+      { name: "Bitget", price: "$20", category: "Crypto", icon: "🚀", active: true, sort: 10, description: "Advanced trading platform" },
+      { name: "Kucoin", price: "$20", category: "Crypto", icon: "🔥", active: true, sort: 11, description: "Comprehensive crypto exchange" },
+      { name: "PayPal", price: "$15", category: "E-Wallets", icon: "💙", popular: true, active: true, sort: 12, description: "Most popular payment solution" },
+      { name: "Mexc", price: "$20", category: "Crypto", icon: "💎", active: true, sort: 13, description: "Crypto trading exchange" },
+      { name: "Exness", price: "$20", category: "Trading", icon: "📊", active: true, sort: 14, description: "Trusted forex broker" },
+      { name: "Vodafone Cash Top-up", price: "120 EGP/100 EGP", note: "Bulk discount available", category: "Local Services", icon: "📱", active: true, sort: 15, description: "Instant top-up best rates" },
+      { name: "TikTok Withdrawal", price: "Based on amount", category: "Special Services", icon: "🎵", active: true, sort: 16, description: "Easy TikTok earnings withdrawal" },
+      { name: "PayPal Withdrawal", price: "Based on amount", category: "Special Services", icon: "💰", active: true, sort: 17, description: "Local PayPal money transfer" },
     ],
     payments: [
       { label: "Vodafone Cash", value: "01062453344", icon: "📱", color: "red" },
@@ -477,7 +199,7 @@ const siteData: Record<string, any> = {
   },
 }
 
-function buildWhatsApp(service: string, price: string, locale = "ar") {
+function buildWhatsApp(service: string, price: string, locale: string = "ar") {
   const phone = "201062453344"
   const timestamp = Date.now()
   const requestId = `LP-${timestamp}`
@@ -524,7 +246,7 @@ function useInViewAnimation() {
           }
         }
       },
-      { threshold: 0.12 },
+      { threshold: 0.12 }
     )
 
     const nodes = document.querySelectorAll("[data-anim-id]")
@@ -566,8 +288,9 @@ function CopyField({ value }: { value: string }) {
 }
 
 export default function Page() {
-  const { design, locale, setContent, setDesign } = useCMS()
+  const { design, locale } = useCMS()
   const { setTheme } = useTheme()
+  const { setContent, setDesign } = useCMS()
 
   // Sync theme and dir/lang
   useEffect(() => {
@@ -592,7 +315,6 @@ export default function Page() {
     })()
   }, [setContent, setDesign])
 
-  // Refetch on publish broadcast
   const refetchPublished = React.useCallback(async () => {
     try {
       const r = await fetch("/api/content/published", { cache: "no-store" })
@@ -613,7 +335,7 @@ export default function Page() {
     return () => unsub()
   }, [refetchPublished])
 
-  // Live preview from localStorage (while editing)
+  // Listen to localStorage publish (instant preview when using the CMS)
   useEffect(() => {
     const onStorage = (e: StorageEvent) => {
       if (e.key !== "kyctrust-cms" || !e.newValue) return
@@ -632,15 +354,24 @@ export default function Page() {
   }, [setContent, setDesign])
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-neutral-50 via-emerald-50/40 to-white text-neutral-900 dark:from-neutral-950 dark:via-neutral-950 dark:to-neutral-950 dark:text-neutral-100">
-      <PerfHints />
-      <SiteHeader />
+    <div className="min-h-screen bg-gradient-to-b from-neutral-50 via-emerald-50/40 to-white dark:from-neutral-950 dark:via-neutral-950 dark:to-neutral-950 text-neutral-900 dark:text-neutral-100 relative">
+      {/* Decorative softly animated blobs */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-40 -right-32 h-72 w-72 rounded-full bg-emerald-500/15 blur-3xl animate-pulse" />
+        <div className="absolute -bottom-48 -left-32 h-80 w-80 rounded-full bg-violet-500/15 blur-3xl animate-pulse [animation-delay:600ms]" />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 h-96 w-96 rounded-full bg-emerald-500/10 blur-3xl animate-pulse [animation-delay:1200ms]" />
+      </div>
+
       <main>
         <BlocksRenderer />
-        <ReviewsSection />
       </main>
-      <SiteFooter />
-      <ChatbotWidget />
+
+      {/* Footer */}
+      <footer className="mt-6 bg-neutral-950 px-4 py-10 text-neutral-200">
+        <div className="mx-auto max-w-7xl text-center">
+          <p className="text-xs text-neutral-500">© {new Date().getFullYear()} kyctrust</p>
+        </div>
+      </footer>
     </div>
   )
 }

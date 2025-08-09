@@ -9,9 +9,6 @@
     "start": "next start"
   },
   "dependencies": {
-    "@ai-sdk/deepinfra": "latest",
-    "@ai-sdk/groq": "latest",
-    "@ai-sdk/xai": "latest",
     "@dnd-kit/core": "latest",
     "@dnd-kit/sortable": "latest",
     "@dnd-kit/utilities": "latest",
@@ -46,8 +43,6 @@
     "@radix-ui/react-toggle-group": "1.1.1",
     "@radix-ui/react-tooltip": "1.1.6",
     "@reduxjs/toolkit": "latest",
-    "@supabase/supabase-js": "latest",
-    "ai": "latest",
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -62,7 +57,6 @@
     "next": "15.2.4",
     "next-themes": "latest",
     "node:crypto": "latest",
-    "node:timers": "latest",
     "react": "^19",
     "react-day-picker": "9.8.0",
     "react-dom": "^19",
