@@ -13,7 +13,7 @@
 See docs/INSTALLER.md for first-time setup.
 \`\`\`
 
-```plaintext file="docs/INSTALLER.md"
+\`\`\`plaintext file="docs/INSTALLER.md"
 # Installer
 
 Open /install for first-time setup:
